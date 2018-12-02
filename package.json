@@ -1,0 +1,50 @@
+{
+  "name": "gatsby-source-tmdb-example",
+  "description": "Get data from the TMDb API with Gatsby",
+  "private": true,
+  "version": "1.0.0",
+  "author": "LekoArts <hello@lekoarts.de>",
+  "dependencies": {
+    "babel-plugin-styled-components": "^1.8.0",
+    "gatsby": "^2.0.53",
+    "gatsby-image": "^2.0.20",
+    "gatsby-plugin-manifest": "^2.0.9",
+    "gatsby-plugin-netlify": "^2.0.6",
+    "gatsby-plugin-netlify-cache": "^1.0.0",
+    "gatsby-plugin-offline": "^2.0.16",
+    "gatsby-plugin-react-helmet": "^3.0.2",
+    "gatsby-plugin-sharp": "^2.0.12",
+    "gatsby-plugin-sitemap": "^2.0.2",
+    "gatsby-plugin-styled-components": "^3.0.1",
+    "gatsby-source-filesystem": "^2.0.8",
+    "gatsby-source-tmdb": "^0.0.2",
+    "gatsby-transformer-sharp": "^2.1.8",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-helmet": "^5.2.0"
+  },
+  "keywords": [
+    "gatsby",
+    "tmdb",
+    "movies",
+    "films"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "dev": "gatsby develop -o"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "dotenv": "^6.1.0",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "prettier": "^1.15.1"
+  }
+}
