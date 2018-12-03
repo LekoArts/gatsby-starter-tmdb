@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { graphql, StaticQuery } from 'gatsby'
-import { createGlobalStyle } from 'styled-components'
+import { graphql, Link, StaticQuery } from 'gatsby'
+import styled, { createGlobalStyle } from 'styled-components'
 import Helmet from 'react-helmet'
+import { IconMother } from './Icon'
 
 const { Provider: SiteProvider, Consumer: SiteConsumer } = React.createContext()
 
@@ -12,12 +13,15 @@ const GlobalStyle = createGlobalStyle`
 @import url('https://rsms.me/inter/inter-ui.css');
 
 :root {
-  --bg-dark: #272b35;
-  --bg-light: #353b47;
+  --bg-dark: #172742;
+  --bg-light: #47524f;
   --primary: #00de7b;
   --primary-light: #71ffc0;
+  --black: #0c111f;
+  --blue: #00d6dd;
   --white: #f6fffa;
   --grey: #9fb7c7;
+  --grey-light: #cee8f8;
   --br: 5px;
 }
 
@@ -40,7 +44,9 @@ html {
 }
 
 @supports (font-variation-settings: normal) {
-  html { font-family: 'Inter UI var alt', '-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Helvetica','Arial','sans-serif','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol', sans-serif; }
+  html { 
+    font-family: 'Inter UI var alt', '-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Helvetica','Arial','sans-serif','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol', sans-serif; 
+  }
 }
 
 body {
@@ -48,6 +54,7 @@ body {
   color: var(--white);
   margin: 0;
   padding: 0;
+  border-bottom: 1px solid var(--bg-dark);
 }
 
 ::selection {
@@ -62,6 +69,10 @@ a {
   &:hover, &:focus {
     color: var(--primary-light);
   }
+}
+
+.hidden {
+  display: none !important;
 }
 
 .github-corner:hover .octo-arm {
@@ -85,12 +96,22 @@ a {
 
 @media (max-width: 500px) {
   .github-corner:hover .octo-arm {
-    animation:none
+    animation: none;
   }
   .github-corner .octo-arm {
-    animation: octocat-wave 560ms ease-in-out
+    animation: octocat-wave 560ms ease-in-out;
   }
 }
+`
+
+const Footer = styled.footer`
+  text-align: center;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  color: var(--grey);
+  [data-size='small'] {
+    font-size: 0.8rem;
+  }
 `
 
 export default class Layout extends Component {
@@ -130,7 +151,7 @@ export default class Layout extends Component {
                 </Helmet>
                 <GlobalStyle />
                 <a
-                  href="https://github.com/LekoArts/gatsby-source-tmdb-example"
+                  href="https://github.com/LekoArts/gatsby-source-tmdb"
                   className="github-corner"
                   aria-label="View source on GitHub"
                 >
@@ -163,6 +184,15 @@ export default class Layout extends Component {
                   </svg>
                 </a>
                 {children}
+                <Footer>
+                  <p>
+                    Made by <a href="https://www.lekoarts.de">LekoArts</a>.{' '}
+                    <a href="https://github.com/LekoArts/gatsby-source-tmdb">Source</a>.{' '}
+                    <Link to="/attribution">Attribution</Link>.
+                  </p>
+                  <p data-size="small">Powered by The Movie Database</p>
+                </Footer>
+                <IconMother />
               </>
             </SiteProvider>
           )

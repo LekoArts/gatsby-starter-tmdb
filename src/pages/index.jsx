@@ -3,15 +3,16 @@ import { graphql } from 'gatsby'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Tab, Tabs, TabList, TabPanel } from '../components/TabOverview'
-import Layout, { SiteConsumer } from '../components/Layout'
+import { SiteConsumer } from '../components/Layout'
 import Card from '../components/Card'
+import { Icon } from '../components/Icon'
 
-const Wrapper = styled.main`
+const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 2rem 6rem 2rem;
+  padding: 3rem 2rem 3rem 2rem;
   @media (max-width: 600px) {
-    padding: 2rem 1rem 4rem 1rem;
+    padding: 2rem 1rem 2rem 1rem;
   }
 `
 
@@ -27,16 +28,35 @@ const SmallTitle = styled.h2`
   font-weight: 500;
 `
 
-const SmallInfo = styled.div`
-  color: var(--grey);
+const Legend = styled.div`
   margin-bottom: 6rem;
-  p {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  [data-name='next'],
+  [data-name='first'],
+  [data-name='star'],
+  [data-name='episodes'],
+  [data-name='seasons'] {
+    fill: var(--grey-light);
   }
-  span {
-    color: var(--primary);
-    font-weight: 700;
+  h2 {
+    margin-top: 0;
+    color: var(--grey-light);
+  }
+`
+
+const LegendWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  div {
+    display: flex;
+    align-items: center;
+    color: var(--grey);
+    padding: 0.5rem 1.25rem 0.5rem 0;
+  }
+  [data-item='custom-icon'] {
+    margin-right: 0.4rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 `
 
@@ -52,11 +72,44 @@ const Column = styled.div`
   flex-basis: 100%;
   max-width: 100%;
   width: 100%;
-  margin-bottom: 3rem;
-  @media screen and (min-width: 980px) {
-    flex-basis: calc(99.9% * 1 / 3 - 2rem);
-    max-width: calc(99.9% * 1 / 3 - 2rem);
-    width: calc(99.9% * 1 / 3 - 2rem);
+  margin-bottom: 2.5rem;
+  @media screen and (min-width: 321px) {
+    flex-basis: calc(99.9% * 1 / 2 - 0.5rem);
+    max-width: calc(99.9% * 1 / 2 - 0.5rem);
+    width: calc(99.9% * 1 / 2 - 0.5rem);
+    margin-bottom: 1rem;
+  }
+  @media screen and (min-width: 700px) {
+    flex-basis: calc(99.9% * 1 / 3 - 1rem);
+    max-width: calc(99.9% * 1 / 3 - 1rem);
+    width: calc(99.9% * 1 / 3 - 1rem);
+    margin-bottom: 2rem;
+  }
+  @media screen and (min-width: 1000px) {
+    flex-basis: calc(99.9% * 1 / 3 - 1.5rem);
+    max-width: calc(99.9% * 1 / 3 - 1.5rem);
+    width: calc(99.9% * 1 / 3 - 1.5rem);
+    margin-bottom: 2.5rem;
+  }
+`
+
+const BigTab = styled(Tab)`
+  padding: 0;
+  margin-right: 2rem;
+  border-radius: 0;
+  color: var(--grey);
+  font-weight: 500;
+  font-size: 1.5em;
+  box-shadow: rgba(73, 221, 122, 0.5) 0 0 0 0 inset;
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+  &.selected {
+    background: none;
+    color: var(--white);
+  }
+  &:not(.selected) {
+    &:hover {
+      box-shadow: rgba(73, 221, 122, 0.5) 0 -3px 0 0 inset;
+    }
   }
 `
 
@@ -65,53 +118,140 @@ const IndexPage = ({ data: { lists, favMovies, favTV, watchedTV, watchedMovies }
     {({ username, secureBaseUrl }) => {
       const imageLink = img => `${secureBaseUrl}w500${img}`
       return (
-        <Layout>
-          <Wrapper>
+        <Wrapper>
+          <header>
             <Title>
               Series & Movies<span>.</span> {username}
             </Title>
-            <SmallInfo>
-              <SmallTitle>Statistics</SmallTitle>
-              <p>
-                Lists: <span>{lists.totalCount}</span> — Fav. Series: <span>{favTV.totalCount}</span> — Fav. Movies:{' '}
-                <span>{favMovies.totalCount}</span> — Watched Movies: <span>{watchedMovies.totalCount}</span> — Watched
-                Series: <span>{watchedTV.totalCount}</span>
-              </p>
-            </SmallInfo>
-            <SmallTitle>Favorites</SmallTitle>
-            <Tabs>
+            <Legend>
+              <SmallTitle>Legend</SmallTitle>
+              <LegendWrapper>
+                <div>
+                  <Icon name="star" /> Rating
+                </div>
+                <div>
+                  <Icon name="first" /> Release
+                </div>
+                <div>
+                  <Icon name="next" /> Next Episode
+                </div>
+                <div>
+                  <Icon name="episodes" /> Episodes
+                </div>
+                <div>
+                  <Icon name="seasons" /> Seasons
+                </div>
+                <div>
+                  <Icon name="running" /> Returning Series
+                </div>
+                <div>
+                  <Icon name="ended" /> Ended
+                </div>
+              </LegendWrapper>
+            </Legend>
+          </header>
+          <main>
+            <Tabs forceRenderTabPanel>
               <TabList>
-                <Tab>Series</Tab>
-                <Tab>Movies</Tab>
+                <BigTab>Favorites</BigTab>
+                <BigTab>Watchlist</BigTab>
+                <BigTab>Lists</BigTab>
               </TabList>
               <TabPanel>
-                <Row>
-                  {favTV.edges.map(({ node: tv }) => (
-                    <Column>
-                      <Card cover={imageLink(tv.poster_path)} name={tv.name} />
-                    </Column>
-                  ))}
-                </Row>
+                <Tabs forceRenderTabPanel>
+                  <TabList>
+                    <Tab>Series ({favTV.totalCount})</Tab>
+                    <Tab>Movies ({favMovies.totalCount})</Tab>
+                  </TabList>
+                  <TabPanel>
+                    <Row>
+                      {favTV.edges.map(({ node: tv }) => {
+                        let airDate
+                        if (tv.next_episode_to_air) {
+                          airDate = tv.next_episode_to_air.air_date
+                        }
+                        return (
+                          <Column key={tv.name}>
+                            <Card
+                              cover={imageLink(tv.poster_path)}
+                              name={tv.name}
+                              next={airDate}
+                              rating={tv.vote_average}
+                              status={tv.status}
+                              release={tv.first_air_date}
+                              episodes={tv.number_of_episodes}
+                              seasons={tv.number_of_seasons}
+                            />
+                          </Column>
+                        )
+                      })}
+                    </Row>
+                  </TabPanel>
+                  <TabPanel>
+                    <Row>
+                      {favMovies.edges.map(({ node: movie }) => (
+                        <Column key={movie.title}>
+                          <Card
+                            cover={imageLink(movie.poster_path)}
+                            name={movie.title}
+                            rating={movie.vote_average}
+                            release={movie.release_date}
+                          />
+                        </Column>
+                      ))}
+                    </Row>
+                  </TabPanel>
+                </Tabs>
               </TabPanel>
               <TabPanel>
-                <h2>Any content 2</h2>
+                <Tabs forceRenderTabPanel>
+                  <TabList>
+                    <Tab>Series ({watchedTV.totalCount})</Tab>
+                    <Tab>Movies ({watchedMovies.totalCount})</Tab>
+                  </TabList>
+                  <TabPanel>
+                    <Row>
+                      {watchedTV.edges.map(({ node: tv }) => {
+                        let airDate
+                        if (tv.next_episode_to_air) {
+                          airDate = tv.next_episode_to_air.air_date
+                        }
+                        return (
+                          <Column key={tv.name}>
+                            <Card
+                              cover={imageLink(tv.poster_path)}
+                              name={tv.name}
+                              next={airDate}
+                              rating={tv.vote_average}
+                              status={tv.status}
+                              release={tv.first_air_date}
+                              episodes={tv.number_of_episodes}
+                              seasons={tv.number_of_seasons}
+                            />
+                          </Column>
+                        )
+                      })}
+                    </Row>
+                  </TabPanel>
+                  <TabPanel>
+                    <Row>
+                      {watchedMovies.edges.map(({ node: movie }) => (
+                        <Column key={movie.title}>
+                          <Card
+                            cover={imageLink(movie.poster_path)}
+                            name={movie.title}
+                            rating={movie.vote_average}
+                            release={movie.release_date}
+                          />
+                        </Column>
+                      ))}
+                    </Row>
+                  </TabPanel>
+                </Tabs>
               </TabPanel>
             </Tabs>
-            <SmallTitle>Watchlist</SmallTitle>
-            <Tabs>
-              <TabList>
-                <Tab>Series</Tab>
-                <Tab>Movies</Tab>
-              </TabList>
-              <TabPanel>
-                <h2>Any content 1</h2>
-              </TabPanel>
-              <TabPanel>
-                <h2>Any content 2</h2>
-              </TabPanel>
-            </Tabs>
-          </Wrapper>
-        </Layout>
+          </main>
+        </Wrapper>
       )
     }}
   </SiteConsumer>
@@ -127,12 +267,15 @@ IndexPage.propTypes = {
     }).isRequired,
     favMovies: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
+      edges: PropTypes.array.isRequired,
     }).isRequired,
     favTV: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
+      edges: PropTypes.array.isRequired,
     }).isRequired,
     watchedTV: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
+      edges: PropTypes.array.isRequired,
     }).isRequired,
     watchedMovies: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
@@ -155,17 +298,56 @@ export const pageQuery = graphql`
       edges {
         node {
           poster_path
+          name
+          next_episode_to_air {
+            air_date
+          }
+          vote_average
+          status
+          number_of_episodes
+          number_of_seasons
+          first_air_date
         }
       }
     }
-    favMovies: allTmdbAccountFavoriteMovies {
+    favMovies: allTmdbAccountFavoriteMovies(sort: { fields: [vote_average], order: DESC }) {
       totalCount
+      edges {
+        node {
+          release_date
+          vote_average
+          title
+          poster_path
+        }
+      }
     }
-    watchedTV: allTmdbAccountTvWatchlist {
+    watchedTV: allTmdbAccountTvWatchlist(sort: { fields: [first_air_date], order: DESC }) {
       totalCount
+      edges {
+        node {
+          first_air_date
+          next_episode_to_air {
+            air_date
+          }
+          vote_average
+          status
+          poster_path
+          name
+          number_of_seasons
+          number_of_episodes
+        }
+      }
     }
-    watchedMovies: allTmdbAccountMovieWatchlist {
+    watchedMovies: allTmdbAccountMovieWatchlist(sort: { fields: [release_date], order: DESC }) {
       totalCount
+      edges {
+        node {
+          release_date
+          vote_average
+          title
+          poster_path
+        }
+      }
     }
   }
 `
