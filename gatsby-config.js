@@ -5,11 +5,22 @@ require('dotenv').config({
 module.exports = {
   siteMetadata: {
     title: 'The Movie Database - Gatsby',
+    description: 'Source from The Movie Database (TMDb) API (v3) in Gatsby.',
+    url: 'https://gatsby-source-tmdb.netlify.com',
+    logo: '/logo.png',
+    twitter: '@lekoarts_de',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
     'gatsby-transformer-sharp',
     'gatsby-plugin-sharp',
+    'gatsby-plugin-styled-components',
+    {
+      resolve: `gatsby-plugin-layout`,
+      options: {
+        component: require.resolve(`./src/components/Layout.jsx`),
+      },
+    },
     {
       resolve: 'gatsby-source-tmdb',
       options: {
