@@ -7,7 +7,7 @@ import {
 } from 'react-tabs'
 
 const Tabs = styled(UnstyledTabs)`
-  padding: 0.5rem 0 6rem 0;
+  padding: 0.5rem 0 2rem 0;
 `
 
 const TabList = styled(UnstyledTabList)`
@@ -15,7 +15,7 @@ const TabList = styled(UnstyledTabList)`
   justify-content: flex-start;
   flex-wrap: wrap;
   padding: 0;
-  margin: 0 0 4rem 0;
+  margin: 0 0 0.5rem 0;
 `
 
 const Tab = styled(UnstyledTab).attrs({
@@ -28,6 +28,13 @@ const Tab = styled(UnstyledTab).attrs({
   padding: 0.5rem 2rem;
   color: var(--primary);
   border-radius: var(--br);
+  transition: all 0.3s ease-in-out;
+
+  &:not(.selected) {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
 
   &.selected {
     background: var(--primary);

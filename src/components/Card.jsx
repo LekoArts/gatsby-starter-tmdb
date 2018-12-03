@@ -173,7 +173,7 @@ Card.propTypes = {
   cover: PropTypes.string.isRequired,
   next: PropTypes.string,
   rating: PropTypes.number.isRequired,
-  status: PropTypes.oneOf(['Returning Series', 'Ended']),
+  status: PropTypes.oneOf(['Returning Series', 'Ended', 'Canceled']),
   release: PropTypes.string.isRequired,
   episodes: PropTypes.number,
   seasons: PropTypes.number,

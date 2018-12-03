@@ -20,17 +20,21 @@ const Title = styled.h1`
   span {
     color: var(--primary);
   }
-  margin-bottom: 3rem;
+  margin-bottom: 6rem;
 `
 
 const SmallTitle = styled.h2`
   color: var(--white);
   font-weight: 500;
+  font-size: 1rem;
 `
 
 const Legend = styled.div`
-  margin-bottom: 6rem;
-  font-size: 0.9rem;
+  margin-bottom: 3rem;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: var(--br);
+  font-size: 0.8rem;
   [data-name='next'],
   [data-name='first'],
   [data-name='star'],
@@ -55,8 +59,8 @@ const LegendWrapper = styled.div`
   }
   [data-item='custom-icon'] {
     margin-right: 0.4rem;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 `
 
@@ -64,6 +68,7 @@ const Row = styled.section`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding-top: 3rem;
 `
 
 const Column = styled.div`
@@ -109,8 +114,15 @@ const BigTab = styled(Tab)`
   &:not(.selected) {
     &:hover {
       box-shadow: rgba(73, 221, 122, 0.5) 0 -3px 0 0 inset;
+      background: none !important;
     }
   }
+`
+
+const Desc = styled.div`
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: var(--br);
 `
 
 const IndexPage = ({ data: { lists, favMovies, favTV, watchedTV, watchedMovies } }) => (
@@ -249,6 +261,32 @@ const IndexPage = ({ data: { lists, favMovies, favTV, watchedTV, watchedMovies }
                   </TabPanel>
                 </Tabs>
               </TabPanel>
+              <TabPanel>
+                <Tabs forceRenderTabPanel>
+                  <TabList>
+                    {lists.edges.map(({ node: list }) => (
+                      <Tab key={list.name}>{list.name}</Tab>
+                    ))}
+                  </TabList>
+                  {lists.edges.map(({ node: list }) => (
+                    <TabPanel key={list.name}>
+                      <Desc>{list.description}</Desc>
+                      <Row>
+                        {list.items.map(item => (
+                          <Column key={item.name}>
+                            <Card
+                              cover={imageLink(item.poster_path)}
+                              name={item.name}
+                              rating={item.vote_average}
+                              release={item.first_air_date}
+                            />
+                          </Column>
+                        ))}
+                      </Row>
+                    </TabPanel>
+                  ))}
+                </Tabs>
+              </TabPanel>
             </Tabs>
           </main>
         </Wrapper>
@@ -279,6 +317,7 @@ IndexPage.propTypes = {
     }).isRequired,
     watchedMovies: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
+      edges: PropTypes.array.isRequired,
     }).isRequired,
   }).isRequired,
 }
@@ -290,6 +329,13 @@ export const pageQuery = graphql`
       edges {
         node {
           name
+          description
+          items {
+            name
+            vote_average
+            poster_path
+            first_air_date
+          }
         }
       }
     }
