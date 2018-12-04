@@ -99,22 +99,20 @@ const Column = styled.div`
 `
 
 const BigTab = styled(Tab)`
-  padding: 0;
-  margin-right: 2rem;
-  border-radius: 0;
+  padding: 0.3rem 1rem;
+  border-radius: var(--br);
   color: var(--grey);
   font-weight: 500;
   font-size: 1.5em;
-  box-shadow: rgba(73, 221, 122, 0.5) 0 0 0 0 inset;
-  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+  background: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s;
   &.selected {
-    background: none;
+    background: rgba(0, 0, 0, 0.1);
     color: var(--white);
   }
   &:not(.selected) {
     &:hover {
-      box-shadow: rgba(73, 221, 122, 0.5) 0 -3px 0 0 inset;
-      background: none !important;
+      background: rgba(0, 0, 0, 0.1);
     }
   }
 `
