@@ -6,7 +6,7 @@ module.exports = {
   siteMetadata: {
     title: 'The Movie Database - Gatsby',
     description: 'Source from The Movie Database (TMDb) API (v3) in Gatsby.',
-    url: 'https://gatsby-source-tmdb.netlify.com',
+    url: 'https://tmdb.lekoarts.de',
     logo: '/logo.png',
     twitter: '@lekoarts_de',
   },
@@ -16,7 +16,7 @@ module.exports = {
     'gatsby-plugin-sharp',
     'gatsby-plugin-styled-components',
     {
-      resolve: `gatsby-plugin-layout`,
+      resolve: 'gatsby-plugin-layout',
       options: {
         component: require.resolve(`./src/components/Layout.jsx`),
       },
@@ -31,7 +31,7 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-manifest`,
+      resolve: 'gatsby-plugin-manifest',
       options: {
         name: 'The Movie Database - Gatsby',
         short_name: 'TMDb',
