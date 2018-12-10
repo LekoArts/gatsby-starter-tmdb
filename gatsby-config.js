@@ -27,6 +27,16 @@ module.exports = {
         apiKey: process.env.API_KEY,
         sessionID: process.env.SESSION_ID,
         region: 'DE',
+        modules: {
+          account: {
+            activate: true,
+            endpoints: {
+              tvs: ['accountFavoriteTv', 'accountTvWatchlist'],
+              movies: ['accountFavoriteMovies', 'accountMovieWatchlist'],
+              list: 'accountLists',
+            },
+          },
+        },
         timezone: 'Europe/Berlin',
         reqPerTenSeconds: 32,
       },
