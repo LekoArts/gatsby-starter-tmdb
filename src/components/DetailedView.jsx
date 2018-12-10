@@ -253,7 +253,6 @@ export default class DetailedView extends Component {
     this.state = {
       detail: [],
       similar: [],
-      recommended: [],
       isLoading: false,
     }
   }
@@ -262,14 +261,18 @@ export default class DetailedView extends Component {
     this.setState({ isLoading: true })
 
     const [d, s, c, v] = await Promise.all([
-      fetch(`${BASE_URL}${this.props.type}/${this.props.id}?api_key=${process.env.API_KEY}&language=en-US`),
+      fetch(`${BASE_URL}${this.props.type}/${this.props.id}?api_key=${process.env.GATSBY_API_KEY}&language=en-US`),
       fetch(
         `${BASE_URL}${this.props.type}/${this.props.id}/similar?api_key=${
-          process.env.API_KEY
+          process.env.GATSBY_API_KEY
         }&language=en-US&page=1`
       ),
-      fetch(`${BASE_URL}${this.props.type}/${this.props.id}/credits?api_key=${process.env.API_KEY}&language=en-US`),
-      fetch(`${BASE_URL}${this.props.type}/${this.props.id}/videos?api_key=${process.env.API_KEY}&language=en-US`),
+      fetch(
+        `${BASE_URL}${this.props.type}/${this.props.id}/credits?api_key=${process.env.GATSBY_API_KEY}&language=en-US`
+      ),
+      fetch(
+        `${BASE_URL}${this.props.type}/${this.props.id}/videos?api_key=${process.env.GATSBY_API_KEY}&language=en-US`
+      ),
     ])
 
     const detail = await d.json()
