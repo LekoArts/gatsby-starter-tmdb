@@ -1,7 +1,12 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
+exports.onCreatePage = async ({ page, actions }) => {
+  const { createPage } = actions
 
-// You can delete this file if you're not using it
+  // page.matchPath is a special key that's used for matching pages
+  // only on the client.
+  if (page.path.match(/^\/detail/)) {
+    page.matchPath = `/detail/*`
+
+    // Update the page.
+    createPage(page)
+  }
+}

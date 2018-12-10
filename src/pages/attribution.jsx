@@ -1,27 +1,11 @@
 import React from 'react'
-import styled from 'styled-components'
-import { Link } from 'gatsby'
-
-const Wrapper = styled.main`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 2rem 6rem 2rem;
-  min-height: 99.9vh;
-  @media (max-width: 600px) {
-    padding: 2rem 1rem 4rem 1rem;
-  }
-`
-
-const Back = styled(Link)`
-  color: var(--white);
-`
+import Back from '../components/Back'
+import Wrapper from '../components/Wrapper'
 
 const Attribution = () => (
   <Wrapper>
     <h1>Attribution</h1>
-    <p>
-      <Back to="/">Back to home</Back>
-    </p>
+    <Back />
     <p>
       <a href="https://www.themoviedb.org/">The Movie Database</a>
     </p>
