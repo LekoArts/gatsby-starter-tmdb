@@ -28,6 +28,7 @@ module.exports = {
         sessionID: process.env.SESSION_ID,
         region: 'DE',
         timezone: 'Europe/Berlin',
+        reqPerTenSeconds: 32,
       },
     },
     {
@@ -39,7 +40,18 @@ module.exports = {
         background_color: '#272B35',
         theme_color: '#00d374',
         display: 'standalone',
-        icon: 'src/logo.png', // This path is relative to the root of the site.
+        icons: [
+          {
+            src: '/android-chrome-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
       },
     },
     'gatsby-plugin-offline',

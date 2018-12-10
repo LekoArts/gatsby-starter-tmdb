@@ -124,18 +124,19 @@ export default class Layout extends Component {
             siteMetadata: { title, description, url, logo, twitter },
           },
           tmdbAccountInfo: { username },
-          tmdbConfiguration: {
-            images: { secureBaseUrl },
-          },
         }) => {
           const { children } = this.props
           return (
-            <SiteProvider value={{ username, secureBaseUrl }}>
+            <SiteProvider value={{ username }}>
               <>
                 <Helmet>
                   <title>{title}</title>
                   <html lang="en" />
                   <meta name="description" content={description} />
+                  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                  <meta name="msapplication-TileColor" content="#44ce70" />
                   <meta property="og:url" content={url} />
                   <meta property="og:title" content={title} />
                   <meta property="og:description" content={description} />
@@ -219,11 +220,6 @@ const query = graphql`
     }
     tmdbAccountInfo {
       username
-    }
-    tmdbConfiguration {
-      images {
-        secureBaseUrl: secure_base_url
-      }
     }
   }
 `
