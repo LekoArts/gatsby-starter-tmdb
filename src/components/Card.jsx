@@ -1,9 +1,21 @@
 import React, { useState, useRef } from 'react'
+import Img from 'gatsby-image'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useSpring, animated } from 'react-spring'
 import format from 'date-fns/format'
 import { Icon } from './Icon'
+
+const Image = styled(Img)`
+  position: absolute !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1000;
+  height: 100% !important;
+  width: 100% !important;
+`
 
 const Content = styled.div`
   padding: 0.75rem;
@@ -24,8 +36,6 @@ const Inner = styled(animated.div)`
   flex-direction: column;
   justify-content: flex-end;
   padding-bottom: 150%;
-  background: url(${props => props.cover}) 50% 50% no-repeat;
-  background-size: cover;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.5s;
   will-change: transform;
@@ -134,6 +144,7 @@ const Card = ({ name, cover, next, rating, status, release, episodes, seasons })
         ),
       }}
     >
+      <Image fixed={cover} />
       <Content>
         <Title>
           {name} {status && (status === 'Returning Series' ? <Icon name="running" /> : <Icon name="ended" />)}
@@ -170,7 +181,7 @@ export default Card
 
 Card.propTypes = {
   name: PropTypes.string.isRequired,
-  cover: PropTypes.string.isRequired,
+  cover: PropTypes.object.isRequired,
   next: PropTypes.string,
   rating: PropTypes.number.isRequired,
   status: PropTypes.oneOf(['Returning Series', 'Ended', 'Canceled']),
