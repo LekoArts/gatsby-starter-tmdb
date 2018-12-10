@@ -189,7 +189,7 @@ export default class Layout extends Component {
               <Footer>
                 <p>
                   Made by <a href="https://www.lekoarts.de">LekoArts</a>.{' '}
-                  <a href="https://github.com/LekoArts/gatsby-source-tmdb">Source</a>.{' '}
+                  <a href="https://github.com/LekoArts/gatsby-source-tmdb-example">Source</a>.{' '}
                   <Link to="/attribution">Attribution</Link>.
                 </p>
                 <p data-size="small">Powered by The Movie Database</p>
