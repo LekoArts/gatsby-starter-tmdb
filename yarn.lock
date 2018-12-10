@@ -5611,10 +5611,10 @@ gatsby-source-filesystem@^2.0.11, gatsby-source-filesystem@^2.0.7:
     valid-url "^1.0.9"
     xstate "^3.1.0"
 
-gatsby-source-tmdb@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/gatsby-source-tmdb/-/gatsby-source-tmdb-0.1.0.tgz#684a2af308088ae927a196da5d4e3b1b560f0c71"
-  integrity sha512-0QW9gpLFt79SJ4pkI/CD8WrSu7yy892YV1v4TLHkXWRpHbrr4jX5KCsDpeCazytLpkloql0rmNSSnu6g3WNu3g==
+gatsby-source-tmdb@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/gatsby-source-tmdb/-/gatsby-source-tmdb-0.1.2.tgz#3f64516f641106f3ba0340c6f8ad9e6824ac261e"
+  integrity sha512-Htd/0OkxYe5u9VYb2s/KF0fsrmseAxVa5hbatqeZ59zauFUNiqvawWG0KXm5H/VwgVKDoJ+FWYLNnIrcrtBYmQ==
   dependencies:
     "@babel/runtime" "^7.2.0"
     gatsby-source-filesystem "^2.0.7"
