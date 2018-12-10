@@ -3,7 +3,6 @@ import { graphql } from 'gatsby'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Tab, Tabs, TabList, TabPanel } from '../components/TabOverview'
-import { SiteConsumer } from '../components/Layout'
 import Card from '../components/Card'
 import { Icon } from '../components/Icon'
 
@@ -126,177 +125,181 @@ const Desc = styled.div`
   border-radius: var(--br);
 `
 
-const IndexPage = ({ data: { lists, favMovies, favTV, watchedTV, watchedMovies } }) => (
-  <SiteConsumer>
-    {({ username }) => (
-      <Wrapper>
-        <header>
-          <Title>
-            Series & Movies<span>.</span> {username}
-          </Title>
-          <Legend>
-            <SmallTitle>Legend</SmallTitle>
-            <LegendWrapper>
-              <div>
-                <Icon name="star" /> Rating
-              </div>
-              <div>
-                <Icon name="first" /> Release
-              </div>
-              <div>
-                <Icon name="next" /> Next Episode
-              </div>
-              <div>
-                <Icon name="episodes" /> Episodes
-              </div>
-              <div>
-                <Icon name="seasons" /> Seasons
-              </div>
-              <div>
-                <Icon name="running" /> Returning Series
-              </div>
-              <div>
-                <Icon name="ended" /> Ended
-              </div>
-            </LegendWrapper>
-          </Legend>
-        </header>
-        <main>
+const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMovies } }) => (
+  <Wrapper>
+    <header>
+      <Title>
+        Series & Movies<span>.</span> {info.username}
+      </Title>
+      <Legend>
+        <SmallTitle>Legend</SmallTitle>
+        <LegendWrapper>
+          <div>
+            <Icon name="star" /> Rating
+          </div>
+          <div>
+            <Icon name="first" /> Release
+          </div>
+          <div>
+            <Icon name="next" /> Next Episode
+          </div>
+          <div>
+            <Icon name="episodes" /> Episodes
+          </div>
+          <div>
+            <Icon name="seasons" /> Seasons
+          </div>
+          <div>
+            <Icon name="running" /> Returning Series
+          </div>
+          <div>
+            <Icon name="ended" /> Ended
+          </div>
+        </LegendWrapper>
+      </Legend>
+    </header>
+    <main>
+      <Tabs forceRenderTabPanel>
+        <TabList>
+          <BigTab>Favorites</BigTab>
+          <BigTab>Watchlist</BigTab>
+          <BigTab>Lists</BigTab>
+        </TabList>
+        <TabPanel>
           <Tabs forceRenderTabPanel>
             <TabList>
-              <BigTab>Favorites</BigTab>
-              <BigTab>Watchlist</BigTab>
-              <BigTab>Lists</BigTab>
+              <Tab>Series ({favTV.totalCount})</Tab>
+              <Tab>Movies ({favMovies.totalCount})</Tab>
             </TabList>
             <TabPanel>
-              <Tabs forceRenderTabPanel>
-                <TabList>
-                  <Tab>Series ({favTV.totalCount})</Tab>
-                  <Tab>Movies ({favMovies.totalCount})</Tab>
-                </TabList>
-                <TabPanel>
-                  <Row>
-                    {favTV.edges.map(({ node: tv }) => {
-                      let airDate
-                      if (tv.next_episode_to_air) {
-                        airDate = tv.next_episode_to_air.air_date
-                      }
-                      return (
-                        <Column key={tv.name}>
-                          <Card
-                            cover={tv.poster_path.childImageSharp.fixed}
-                            name={tv.name}
-                            next={airDate}
-                            rating={tv.vote_average}
-                            status={tv.status}
-                            release={tv.first_air_date}
-                            episodes={tv.number_of_episodes}
-                            seasons={tv.number_of_seasons}
-                          />
-                        </Column>
-                      )
-                    })}
-                  </Row>
-                </TabPanel>
-                <TabPanel>
-                  <Row>
-                    {favMovies.edges.map(({ node: movie }) => (
-                      <Column key={movie.title}>
-                        <Card
-                          cover={movie.poster_path.childImageSharp.fixed}
-                          name={movie.title}
-                          rating={movie.vote_average}
-                          release={movie.release_date}
-                        />
-                      </Column>
-                    ))}
-                  </Row>
-                </TabPanel>
-              </Tabs>
+              <Row>
+                {favTV.edges.map(({ node: tv }) => {
+                  let airDate
+                  if (tv.next_episode_to_air) {
+                    airDate = tv.next_episode_to_air.air_date
+                  }
+                  return (
+                    <Column key={tv.name}>
+                      <Card
+                        link={`tv/${tv.accountFavoriteTvId}`}
+                        cover={tv.poster_path.childImageSharp.fixed}
+                        name={tv.name}
+                        next={airDate}
+                        rating={tv.vote_average}
+                        status={tv.status}
+                        release={tv.first_air_date}
+                        episodes={tv.number_of_episodes}
+                        seasons={tv.number_of_seasons}
+                      />
+                    </Column>
+                  )
+                })}
+              </Row>
             </TabPanel>
             <TabPanel>
-              <Tabs forceRenderTabPanel>
-                <TabList>
-                  <Tab>Series ({watchedTV.totalCount})</Tab>
-                  <Tab>Movies ({watchedMovies.totalCount})</Tab>
-                </TabList>
-                <TabPanel>
-                  <Row>
-                    {watchedTV.edges.map(({ node: tv }) => {
-                      let airDate
-                      if (tv.next_episode_to_air) {
-                        airDate = tv.next_episode_to_air.air_date
-                      }
-                      return (
-                        <Column key={tv.name}>
-                          <Card
-                            cover={tv.poster_path.childImageSharp.fixed}
-                            name={tv.name}
-                            next={airDate}
-                            rating={tv.vote_average}
-                            status={tv.status}
-                            release={tv.first_air_date}
-                            episodes={tv.number_of_episodes}
-                            seasons={tv.number_of_seasons}
-                          />
-                        </Column>
-                      )
-                    })}
-                  </Row>
-                </TabPanel>
-                <TabPanel>
-                  <Row>
-                    {watchedMovies.edges.map(({ node: movie }) => (
-                      <Column key={movie.title}>
-                        <Card
-                          cover={movie.poster_path.childImageSharp.fixed}
-                          name={movie.title}
-                          rating={movie.vote_average}
-                          release={movie.release_date}
-                        />
-                      </Column>
-                    ))}
-                  </Row>
-                </TabPanel>
-              </Tabs>
-            </TabPanel>
-            <TabPanel>
-              <Tabs forceRenderTabPanel>
-                <TabList>
-                  {lists.edges.map(({ node: list }) => (
-                    <Tab key={list.name}>{list.name}</Tab>
-                  ))}
-                </TabList>
-                {lists.edges.map(({ node: list }) => (
-                  <TabPanel key={list.name}>
-                    <Desc>{list.description}</Desc>
-                    <Row>
-                      {list.items.map(item => (
-                        <Column key={item.name}>
-                          <Card
-                            cover={item.poster_path.childImageSharp.fixed}
-                            name={item.name}
-                            rating={item.vote_average}
-                            release={item.first_air_date}
-                          />
-                        </Column>
-                      ))}
-                    </Row>
-                  </TabPanel>
+              <Row>
+                {favMovies.edges.map(({ node: movie }) => (
+                  <Column key={movie.title}>
+                    <Card
+                      link={`movie/${movie.accountFavoriteMoviesId}`}
+                      cover={movie.poster_path.childImageSharp.fixed}
+                      name={movie.title}
+                      rating={movie.vote_average}
+                      release={movie.release_date}
+                    />
+                  </Column>
                 ))}
-              </Tabs>
+              </Row>
             </TabPanel>
           </Tabs>
-        </main>
-      </Wrapper>
-    )}
-  </SiteConsumer>
+        </TabPanel>
+        <TabPanel>
+          <Tabs forceRenderTabPanel>
+            <TabList>
+              <Tab>Series ({watchedTV.totalCount})</Tab>
+              <Tab>Movies ({watchedMovies.totalCount})</Tab>
+            </TabList>
+            <TabPanel>
+              <Row>
+                {watchedTV.edges.map(({ node: tv }) => {
+                  let airDate
+                  if (tv.next_episode_to_air) {
+                    airDate = tv.next_episode_to_air.air_date
+                  }
+                  return (
+                    <Column key={tv.name}>
+                      <Card
+                        link={`tv/${tv.accountTvWatchlistId}`}
+                        cover={tv.poster_path.childImageSharp.fixed}
+                        name={tv.name}
+                        next={airDate}
+                        rating={tv.vote_average}
+                        status={tv.status}
+                        release={tv.first_air_date}
+                        episodes={tv.number_of_episodes}
+                        seasons={tv.number_of_seasons}
+                      />
+                    </Column>
+                  )
+                })}
+              </Row>
+            </TabPanel>
+            <TabPanel>
+              <Row>
+                {watchedMovies.edges.map(({ node: movie }) => (
+                  <Column key={movie.title}>
+                    <Card
+                      link={`movie/${movie.accountMovieWatchlistId}`}
+                      cover={movie.poster_path.childImageSharp.fixed}
+                      name={movie.title}
+                      rating={movie.vote_average}
+                      release={movie.release_date}
+                    />
+                  </Column>
+                ))}
+              </Row>
+            </TabPanel>
+          </Tabs>
+        </TabPanel>
+        <TabPanel>
+          <Tabs forceRenderTabPanel>
+            <TabList>
+              {lists.edges.map(({ node: list }) => (
+                <Tab key={list.name}>{list.name}</Tab>
+              ))}
+            </TabList>
+            {lists.edges.map(({ node: list }) => (
+              <TabPanel key={list.name}>
+                <Desc>{list.description}</Desc>
+                <Row>
+                  {list.items.map(item => (
+                    <Column key={item.name}>
+                      <Card
+                        link={`${item.media_type}/${item.listItemId}`}
+                        cover={item.poster_path.childImageSharp.fixed}
+                        name={item.name}
+                        rating={item.vote_average}
+                        release={item.first_air_date}
+                      />
+                    </Column>
+                  ))}
+                </Row>
+              </TabPanel>
+            ))}
+          </Tabs>
+        </TabPanel>
+      </Tabs>
+    </main>
+  </Wrapper>
 )
 
 export default IndexPage
 
 IndexPage.propTypes = {
   data: PropTypes.shape({
+    info: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+    }),
     lists: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
       edges: PropTypes.array.isRequired,
@@ -322,6 +325,9 @@ IndexPage.propTypes = {
 
 export const pageQuery = graphql`
   query IndexQuery {
+    info: tmdbAccountInfo {
+      username
+    }
     lists: allTmdbAccountLists {
       totalCount
       edges {
@@ -332,6 +338,8 @@ export const pageQuery = graphql`
             name
             vote_average
             first_air_date
+            media_type
+            listItemId
             poster_path {
               childImageSharp {
                 fixed(height: 525, quality: 90) {
@@ -358,6 +366,7 @@ export const pageQuery = graphql`
           next_episode_to_air {
             air_date
           }
+          accountFavoriteTvId
           vote_average
           status
           number_of_episodes
@@ -373,6 +382,7 @@ export const pageQuery = graphql`
           release_date
           vote_average
           title
+          accountFavoriteMoviesId
           poster_path {
             childImageSharp {
               fixed(height: 525, quality: 90) {
@@ -393,6 +403,7 @@ export const pageQuery = graphql`
           }
           vote_average
           status
+          accountTvWatchlistId
           name
           number_of_seasons
           number_of_episodes
@@ -412,6 +423,7 @@ export const pageQuery = graphql`
         node {
           release_date
           vote_average
+          accountMovieWatchlistId
           title
           poster_path {
             childImageSharp {

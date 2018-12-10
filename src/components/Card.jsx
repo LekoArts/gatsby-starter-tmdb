@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Img from 'gatsby-image'
+import { Link } from 'gatsby'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useSpring, animated } from 'react-spring'
@@ -42,6 +43,7 @@ const Inner = styled(animated.div)`
   width: 100%;
   border-radius: var(--br);
   overflow: hidden;
+  position: relative;
   &:after {
     content: '';
     position: absolute;
@@ -49,7 +51,7 @@ const Inner = styled(animated.div)`
     width: 102%;
     height: 102%;
     top: 0;
-    left: 0;
+    left: -3px;
     right: 0;
     bottom: 0;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
@@ -107,7 +109,19 @@ const ItemText = styled.div`
   text-align: center;
 `
 
-const Card = ({ name, cover, next, rating, status, release, episodes, seasons }) => {
+const StyledLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: var(--white);
+  &:hover {
+    color: var(--white);
+  }
+`
+
+const Card = ({ name, link, cover, next, rating, status, release, episodes, seasons }) => {
   const ref = useRef()
   const [isHovered, setHovered] = useState(false)
 
@@ -144,35 +158,37 @@ const Card = ({ name, cover, next, rating, status, release, episodes, seasons })
         ),
       }}
     >
-      <Image fixed={cover} />
-      <Content>
-        <Title>
-          {name} {status && (status === 'Returning Series' ? <Icon name="running" /> : <Icon name="ended" />)}
-        </Title>
-        <Details>
-          <Item>
-            <Icon name="star" /> <ItemText>{rating}</ItemText>
-          </Item>
-          <Item>
-            <Icon name="first" /> <ItemText>{format(release, 'YYYY')}</ItemText>
-          </Item>
-          {next && (
-            <Item data-name="small-hidden">
-              <Icon name="next" /> <ItemText>{format(next, 'DD.MM.YY')}</ItemText>
-            </Item>
-          )}
-          {episodes && (
+      <StyledLink to={`/detail/${link}`}>
+        <Image fixed={cover} />
+        <Content>
+          <Title>
+            {name} {status && (status === 'Returning Series' ? <Icon name="running" /> : <Icon name="ended" />)}
+          </Title>
+          <Details>
             <Item>
-              <Icon name="episodes" /> <ItemText>{episodes}</ItemText>
+              <Icon name="star" /> <ItemText>{rating}</ItemText>
             </Item>
-          )}
-          {seasons && (
             <Item>
-              <Icon name="seasons" /> <ItemText>{seasons}</ItemText>
+              <Icon name="first" /> <ItemText>{format(release, 'YYYY')}</ItemText>
             </Item>
-          )}
-        </Details>
-      </Content>
+            {next && (
+              <Item data-name="small-hidden">
+                <Icon name="next" /> <ItemText>{format(next, 'DD.MM.YY')}</ItemText>
+              </Item>
+            )}
+            {episodes && (
+              <Item>
+                <Icon name="episodes" /> <ItemText>{episodes}</ItemText>
+              </Item>
+            )}
+            {seasons && (
+              <Item>
+                <Icon name="seasons" /> <ItemText>{seasons}</ItemText>
+              </Item>
+            )}
+          </Details>
+        </Content>
+      </StyledLink>
     </Inner>
   )
 }
@@ -181,6 +197,7 @@ export default Card
 
 Card.propTypes = {
   name: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
   cover: PropTypes.object.isRequired,
   next: PropTypes.string,
   rating: PropTypes.number.isRequired,
