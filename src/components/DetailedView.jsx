@@ -17,14 +17,14 @@ const convertMinsToHrsMins = mins => {
   return `${h} Hours ${m} Minutes`
 }
 
-const calculateTime = ({ episodes, seasons, runTime }) => {
+const calculateTime = ({ episodes, runTime }) => {
   let time
   if (Array.isArray(runTime)) {
     time = runTime[0] // eslint-disable-line
   } else {
     time = runTime
   }
-  return convertMinsToHrsMins(episodes * seasons * time)
+  return convertMinsToHrsMins(episodes * time)
 }
 
 const Information = styled.section`
