@@ -1,9 +1,11 @@
 import React from 'react'
 import Back from '../components/Back'
 import Wrapper from '../components/Wrapper'
+import SEO from '../components/SEO'
 
 const Attribution = () => (
   <Wrapper>
+    <SEO />
     <h1>Attribution</h1>
     <Back />
     <p>

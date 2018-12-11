@@ -8,6 +8,7 @@ import format from 'date-fns/format'
 import Wrapper from './Wrapper'
 import Back from './Back'
 import { Icon } from './Icon'
+import SEO from './SEO'
 
 const convertMinsToHrsMins = mins => {
   let h = Math.floor(mins / 60)
@@ -305,6 +306,7 @@ export default class DetailedView extends Component {
 
     return (
       <Wrapper>
+        <SEO />
         <Helmet>
           <title>{`${detail.title || detail.name} | TMDb - Gatsby`}</title>
           <meta name="description" content={detail.overview} />
@@ -377,7 +379,7 @@ export default class DetailedView extends Component {
               <h2>Top Billed Cast</h2>
               <CastOverview>
                 {credits.cast.slice(0, 6).map(member => (
-                  <Cast>
+                  <Cast key={member.name}>
                     <div className="cast-img-wrapper">
                       <img src={`${IMAGE_URL}w185${member.profile_path}`} alt="" />
                     </div>
@@ -411,7 +413,7 @@ export default class DetailedView extends Component {
               <h2>Featured Crew</h2>
               <CrewOverview>
                 {credits.crew.slice(0, 10).map(member => (
-                  <Crew>
+                  <Crew key={member.name}>
                     {member.name} <span>({member.job})</span>
                   </Crew>
                 ))}
@@ -421,7 +423,7 @@ export default class DetailedView extends Component {
           <h2>Similar {type === 'tv' ? 'Shows' : 'Movies'}</h2>
           <SimOverview>
             {similar.slice(0, 10).map(item => (
-              <a href={`/detail/${type}/${item.id}`}>{item.name || item.title}</a>
+              <a key={item.id} href={`/detail/${type}/${item.id}`}>{item.name || item.title}</a>
             ))}
           </SimOverview>
         </SecondaryInformation>

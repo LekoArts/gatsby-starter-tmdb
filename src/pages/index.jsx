@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Tab, Tabs, TabList, TabPanel } from '../components/TabOverview'
 import Card from '../components/Card'
 import { Icon } from '../components/Icon'
+import SEO from '../components/SEO'
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -127,6 +128,7 @@ const Desc = styled.div`
 
 const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMovies } }) => (
   <Wrapper>
+    <SEO />
     <header>
       <Title>
         Series & Movies<span>.</span> {info.username}
