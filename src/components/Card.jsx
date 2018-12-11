@@ -133,7 +133,6 @@ const Card = ({ name, link, cover, next, rating, status, release, episodes, seas
   return (
     <Inner
       ref={ref}
-      cover={cover}
       onMouseEnter={() => setHovered(true)}
       onMouseMove={({ clientX, clientY }) => {
         const x =
