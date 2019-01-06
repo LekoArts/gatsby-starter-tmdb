@@ -1,0 +1,3 @@
+[template.environment]
+  GATSBY_API_KEY = "Your TMDb API key"
+  SESSION_ID = "Your TMDb session ID"
