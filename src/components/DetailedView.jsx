@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import format from 'date-fns/format'
+import ContentLoader from 'react-content-loader'
 import Wrapper from './Wrapper'
 import Back from './Back'
 import { Icon } from './Icon'
@@ -76,14 +77,20 @@ const Details = styled.div`
     color: var(--grey);
   }
   .statistics-01 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
     margin: 1rem 0;
     color: var(--grey-light);
+    span {
+      margin-left: 2rem;
+    }
     svg {
-      fill: var(--primary);
       vertical-align: bottom;
       width: 2rem;
       height: 2rem;
+    }
+    [data-name='star'] {
+      fill: var(--primary);
     }
   }
   .totalRuntime {
@@ -255,6 +262,7 @@ export default class DetailedView extends Component {
       detail: [],
       similar: [],
       isLoading: false,
+      imgLoaded: false,
     }
   }
 
@@ -291,9 +299,13 @@ export default class DetailedView extends Component {
     await this.setState({ isLoading: false })
   }
 
+  setLoaded = () => {
+    this.setState({ imgLoaded: true })
+  }
+
   render() {
     const { type, id } = this.props
-    const { detail, similar, credits, videos, isLoading } = this.state
+    const { detail, similar, credits, videos, isLoading, imgLoaded } = this.state
 
     let filteredVideos
     if (videos) {
@@ -301,7 +313,29 @@ export default class DetailedView extends Component {
     }
 
     if (isLoading || !detail || !similar || !credits || !videos) {
-      return <Loading>Loading...</Loading>
+      return (
+        <Wrapper>
+          <Back />
+          <ContentLoader rtl height={590} width={700} speed={3} primaryColor="#9faeac" secondaryColor="#dfe8e7">
+            <rect x="0" y="0" rx="0" ry="0" width="276" height="421" />
+            <rect x="0" y="460" rx="0" ry="0" width="116" height="126" />
+            <rect x="125" y="460" rx="0" ry="0" width="116" height="126" />
+            <rect x="250" y="460" rx="0" ry="0" width="116" height="126" />
+            <rect x="375" y="460" rx="0" ry="0" width="116" height="126" />
+            <rect x="500" y="460" rx="0" ry="0" width="116" height="126" />
+            <rect x="310" y="0" rx="0" ry="0" width="358" height="43" />
+            <circle cx="335" cy="90" r="25" />
+            <circle cx="410" cy="90" r="25" />
+            <rect x="310" y="142.67" rx="0" ry="0" width="180" height="12" />
+            <rect x="310" y="167.67" rx="0" ry="0" width="240" height="16" />
+            <rect x="310" y="198.67" rx="0" ry="0" width="160" height="16" />
+            <rect x="310" y="256.67" rx="0" ry="0" width="185" height="26" />
+            <rect x="310" y="299.67" rx="0" ry="0" width="340" height="11" />
+            <rect x="310" y="320.67" rx="0" ry="0" width="340" height="11" />
+            <rect x="310" y="340.67" rx="0" ry="0" width="340" height="11" />
+          </ContentLoader>
+        </Wrapper>
+      )
     }
 
     return (
@@ -319,20 +353,38 @@ export default class DetailedView extends Component {
         <Back />
         <Information>
           <Poster>
-            <img src={`${IMAGE_URL}w500${detail.poster_path}`} alt="" />
+            {!imgLoaded ? (
+              <ContentLoader rtl height={410} width={275} speed={3} primaryColor="#9faeac" secondaryColor="#dfe8e7">
+                <rect x="0" y="0" rx="0" ry="0" width="275" height="410" />
+              </ContentLoader>
+            ) : null}
+            <img
+              onLoad={() => this.setLoaded()}
+              style={!imgLoaded ? { visibility: 'hidden' } : {}}
+              src={`${IMAGE_URL}w500${detail.poster_path}`}
+              alt=""
+            />
           </Poster>
           <Details>
             <h1>
               {detail.title || detail.name} ({format(detail.release_date || detail.first_air_date, 'YYYY')}){' '}
-              {detail.status &&
-                type === 'tv' &&
-                (detail.status === 'Returning Series' ? <Icon name="running" /> : <Icon name="ended" />)}
             </h1>
             {(detail.title !== detail.original_title || detail.name !== detail.original_name) && (
               <div className="original-name">Original: {detail.original_title || detail.original_name}</div>
             )}
             <div className="statistics-01">
               <Icon name="star" /> {detail.vote_average}
+              {detail.status &&
+                type === 'tv' &&
+                (detail.status === 'Returning Series' ? (
+                  <span>
+                    <Icon name="running" /> {detail.status}
+                  </span>
+                ) : (
+                  <span>
+                    <Icon name="ended" /> {detail.status}
+                  </span>
+                ))}
             </div>
             <div className="statistics-02">
               {detail.number_of_episodes && (
@@ -413,7 +465,7 @@ export default class DetailedView extends Component {
               <h2>Featured Crew</h2>
               <CrewOverview>
                 {credits.crew.slice(0, 10).map(member => (
-                  <Crew key={member.name}>
+                  <Crew key={`${member.name}-${member.job}`}>
                     {member.name} <span>({member.job})</span>
                   </Crew>
                 ))}
@@ -423,7 +475,9 @@ export default class DetailedView extends Component {
           <h2>Similar {type === 'tv' ? 'Shows' : 'Movies'}</h2>
           <SimOverview>
             {similar.slice(0, 10).map(item => (
-              <a key={item.id} href={`/detail/${type}/${item.id}`}>{item.name || item.title}</a>
+              <a key={item.id} href={`/detail/${type}/${item.id}`}>
+                {item.name || item.title}
+              </a>
             ))}
           </SimOverview>
         </SecondaryInformation>
