@@ -1,7 +1,6 @@
-/* eslint react/destructuring-assignment: 0 */
-/* eslint react/require-default-props: 0 */
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import format from 'date-fns/format'
@@ -35,11 +34,6 @@ const Information = styled.section`
   @media (max-width: 700px) {
     flex-direction: column;
   }
-`
-
-const Loading = styled.div`
-  padding: 4rem;
-  font-size: 2rem;
 `
 
 const Poster = styled.div`
@@ -254,69 +248,44 @@ const SimOverview = styled.section`
 const BASE_URL = 'https://api.themoviedb.org/3/'
 const IMAGE_URL = 'https://image.tmdb.org/t/p/'
 
-export default class DetailedView extends Component {
-  constructor(props) {
-    super(props)
+const useFetch = ({ type, id }) => {
+  const [data, setData] = useState(null)
+  const [isLoading, setLoading] = useState(true)
 
-    this.state = {
-      detail: [],
-      similar: [],
-      isLoading: false,
-      imgLoaded: false,
-    }
-  }
-
-  async componentDidMount() {
-    this.setState({ isLoading: true })
-
+  const fetchData = async () => {
+    setLoading(true)
     const [d, s, c, v] = await Promise.all([
-      fetch(`${BASE_URL}${this.props.type}/${this.props.id}?api_key=${process.env.GATSBY_API_KEY}&language=en-US`),
-      fetch(
-        `${BASE_URL}${this.props.type}/${this.props.id}/similar?api_key=${
-          process.env.GATSBY_API_KEY
-        }&language=en-US&page=1`
-      ),
-      fetch(
-        `${BASE_URL}${this.props.type}/${this.props.id}/credits?api_key=${process.env.GATSBY_API_KEY}&language=en-US`
-      ),
-      fetch(
-        `${BASE_URL}${this.props.type}/${this.props.id}/videos?api_key=${process.env.GATSBY_API_KEY}&language=en-US`
-      ),
+      axios(`${BASE_URL}${type}/${id}?api_key=${process.env.GATSBY_API_KEY}&language=en-US`),
+      axios(`${BASE_URL}${type}/${id}/similar?api_key=${process.env.GATSBY_API_KEY}&language=en-US&page=1`),
+      axios(`${BASE_URL}${type}/${id}/credits?api_key=${process.env.GATSBY_API_KEY}&language=en-US`),
+      axios(`${BASE_URL}${type}/${id}/videos?api_key=${process.env.GATSBY_API_KEY}&language=en-US`),
     ])
-
-    const detail = await d.json()
-    const similar = await s.json()
-    const credits = await c.json()
-    const videos = await v.json()
-
-    await this.setState({
-      detail,
-      similar: similar.results,
-      credits,
-      videos: videos.results,
+    setData({
+      detail: d.data,
+      similar: s.data.results,
+      credits: c.data,
+      videos: v.data.results.filter(video => video.type === 'Trailer'),
     })
-
-    await this.setState({ isLoading: false })
+    setLoading(false)
   }
 
-  setLoaded = () => {
-    this.setState({ imgLoaded: true })
-  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-  render() {
-    const { type, id } = this.props
-    const { detail, similar, credits, videos, isLoading, imgLoaded } = this.state
+  return [data, isLoading]
+}
 
-    let filteredVideos
-    if (videos) {
-      filteredVideos = videos.filter(video => video.type === 'Trailer')
-    }
+const DetailedView = ({ type, id }) => {
+  const [data, isLoading] = useFetch({ type, id })
+  const [imgIsLoading, setImgIsLoading] = useState(false)
 
-    if (isLoading || !detail || !similar || !credits || !videos) {
-      return (
-        <Wrapper>
+  return (
+    <Wrapper>
+      {isLoading ? (
+        <>
           <Back />
-          <ContentLoader rtl height={590} width={700} speed={3} primaryColor="#9faeac" secondaryColor="#dfe8e7">
+          <ContentLoader height={590} width={700} speed={3} primaryColor="#9faeac" secondaryColor="#dfe8e7">
             <rect x="0" y="0" rx="0" ry="0" width="276" height="421" />
             <rect x="0" y="460" rx="0" ry="0" width="116" height="126" />
             <rect x="125" y="460" rx="0" ry="0" width="116" height="126" />
@@ -334,159 +303,180 @@ export default class DetailedView extends Component {
             <rect x="310" y="320.67" rx="0" ry="0" width="340" height="11" />
             <rect x="310" y="340.67" rx="0" ry="0" width="340" height="11" />
           </ContentLoader>
-        </Wrapper>
-      )
-    }
-
-    return (
-      <Wrapper>
-        <SEO />
-        <Helmet>
-          <title>{`${detail.title || detail.name} | TMDb - Gatsby`}</title>
-          <meta name="description" content={detail.overview} />
-          <meta property="og:title" content={`${detail.title || detail.name} | TMDb - Gatsby`} />
-          <meta property="og:url" content={`https://tmdb.lekoarts.de/detail/${type}/${id}`} />
-          <meta property="og:description" content={detail.overview} />
-          <meta name="twitter:title" content={`${detail.title || detail.name} | TMDb - Gatsby`} />
-          <meta name="twitter:description" content={detail.overview} />
-        </Helmet>
-        <Back />
-        <Information>
-          <Poster>
-            {!imgLoaded ? (
-              <ContentLoader rtl height={410} width={275} speed={3} primaryColor="#9faeac" secondaryColor="#dfe8e7">
-                <rect x="0" y="0" rx="0" ry="0" width="275" height="410" />
-              </ContentLoader>
-            ) : null}
-            <img
-              onLoad={() => this.setLoaded()}
-              style={!imgLoaded ? { visibility: 'hidden' } : {}}
-              src={`${IMAGE_URL}w500${detail.poster_path}`}
-              alt=""
-            />
-          </Poster>
-          <Details>
-            <h1>
-              {detail.title || detail.name} ({format(detail.release_date || detail.first_air_date, 'YYYY')}){' '}
-            </h1>
-            {(detail.title !== detail.original_title || detail.name !== detail.original_name) && (
-              <div className="original-name">Original: {detail.original_title || detail.original_name}</div>
-            )}
-            <div className="statistics-01">
-              <Icon name="star" /> {detail.vote_average}
-              {detail.status &&
-                type === 'tv' &&
-                (detail.status === 'Returning Series' ? (
-                  <span>
-                    <Icon name="running" /> {detail.status}
-                  </span>
-                ) : (
-                  <span>
-                    <Icon name="ended" /> {detail.status}
-                  </span>
-                ))}
-            </div>
-            <div className="statistics-02">
-              {detail.number_of_episodes && (
-                <div>
-                  <Icon name="episodes" /> {detail.number_of_episodes}
-                </div>
+        </>
+      ) : (
+        <>
+          <SEO />
+          <Helmet
+            title={`${data.detail.title || data.detail.name} | TMDb - Gatsby`}
+            meta={[
+              {
+                name: 'description',
+                content: data.detail.overview,
+              },
+              {
+                name: 'og:title',
+                content: `${data.detail.title || data.detail.name} | TMDb - Gatsby`,
+              },
+              {
+                name: 'og:url',
+                content: `https://tmdb.lekoarts.de/data.detail/${type}/${id}`,
+              },
+              {
+                name: 'og:description',
+                content: data.detail.overview,
+              },
+              {
+                name: 'twitter:title',
+                content: `${data.detail.title || data.detail.name} | TMDb - Gatsby`,
+              },
+              {
+                name: 'twitter:description',
+                content: data.detail.overview,
+              },
+            ]}
+          />
+          <Back />
+          <Information>
+            <Poster>
+              {!imgIsLoading ? (
+                <ContentLoader rtl height={410} width={275} speed={3} primaryColor="#9faeac" secondaryColor="#dfe8e7">
+                  <rect x="0" y="0" rx="0" ry="0" width="275" height="410" />
+                </ContentLoader>
+              ) : null}
+              <img
+                onLoad={() => setImgIsLoading(true)}
+                style={!imgIsLoading ? { visibility: 'hidden' } : {}}
+                src={`${IMAGE_URL}w500${data.detail.poster_path}`}
+                alt=""
+              />
+            </Poster>
+            <Details>
+              <h1>
+                {data.detail.title || data.detail.name} (
+                {format(data.detail.release_date || data.detail.first_air_date, 'YYYY')}){' '}
+              </h1>
+              {(data.detail.title !== data.detail.original_title || data.detail.name !== data.detail.original_name) && (
+                <div className="original-name">Original: {data.detail.original_title || data.detail.original_name}</div>
               )}
-              {detail.number_of_seasons && (
-                <div>
-                  <Icon name="seasons" /> {detail.number_of_seasons}
-                </div>
-              )}
-              {detail.next_episode_to_air && (
-                <div>
-                  <Icon name="next" /> {format(detail.next_episode_to_air.air_date, 'DD.MM.YY')}
-                </div>
-              )}
-            </div>
-            {detail.runtime && <div>Runtime: {detail.runtime} Minutes</div>}
-            {detail.episode_run_time && (
-              <div className="totalRuntime">
-                Total Runtime:{' '}
-                {calculateTime({
-                  episodes: detail.number_of_episodes,
-                  seasons: detail.number_of_seasons,
-                  runTime: detail.episode_run_time,
-                })}
+              <div className="statistics-01">
+                <Icon name="star" /> {data.detail.vote_average}
+                {data.detail.status &&
+                  type === 'tv' &&
+                  (data.detail.status === 'Returning Series' ? (
+                    <span>
+                      <Icon name="running" /> {data.detail.status}
+                    </span>
+                  ) : (
+                    <span>
+                      <Icon name="ended" /> {data.detail.status}
+                    </span>
+                  ))}
               </div>
+              <div className="statistics-02">
+                {data.detail.number_of_episodes && (
+                  <div>
+                    <Icon name="episodes" /> {data.detail.number_of_episodes}
+                  </div>
+                )}
+                {data.detail.number_of_seasons && (
+                  <div>
+                    <Icon name="seasons" /> {data.detail.number_of_seasons}
+                  </div>
+                )}
+                {data.detail.next_episode_to_air && (
+                  <div>
+                    <Icon name="next" /> {format(data.detail.next_episode_to_air.air_date, 'DD.MM.YY')}
+                  </div>
+                )}
+              </div>
+              {data.detail.runtime && <div>Runtime: {data.detail.runtime} Minutes</div>}
+              {data.detail.episode_run_time && (
+                <div className="totalRuntime">
+                  Total Runtime:{' '}
+                  {calculateTime({
+                    episodes: data.detail.number_of_episodes,
+                    seasons: data.detail.number_of_seasons,
+                    runTime: data.detail.episode_run_time,
+                  })}
+                </div>
+              )}
+              <Genres>
+                {data.detail.genres.map(genre => (
+                  <Genre key={genre.id}>{genre.name}</Genre>
+                ))}
+              </Genres>
+              <Overview>
+                <h2>Overview</h2>
+                <p>{data.detail.overview}</p>
+              </Overview>
+            </Details>
+          </Information>
+          <SecondaryInformation>
+            {data.credits.cast.length > 0 && (
+              <>
+                <h2>Top Billed Cast</h2>
+                <CastOverview>
+                  {data.credits.cast.slice(0, 6).map(member => (
+                    <Cast key={member.name}>
+                      <div className="cast-img-wrapper">
+                        <img src={`${IMAGE_URL}w185${member.profile_path}`} alt="" />
+                      </div>
+                      <div className="cast-names">
+                        <span>{member.name}</span>
+                        <span>{member.character}</span>
+                      </div>
+                    </Cast>
+                  ))}
+                </CastOverview>
+              </>
             )}
-            <Genres>
-              {detail.genres.map(genre => (
-                <Genre key={genre.id}>{genre.name}</Genre>
+            {data.videos.length > 0 && (
+              <>
+                <h2>Trailer</h2>
+                <Trailer>
+                  <iframe
+                    width="560"
+                    title="Trailer"
+                    height="315"
+                    src={`https://www.youtube-nocookie.com/embed/${data.videos[0].key}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </Trailer>
+              </>
+            )}
+            {data.credits.crew.length > 0 && (
+              <>
+                <h2>Featured Crew</h2>
+                <CrewOverview>
+                  {data.credits.crew.slice(0, 10).map(member => (
+                    <Crew key={`${member.name}-${member.job}`}>
+                      {member.name} <span>({member.job})</span>
+                    </Crew>
+                  ))}
+                </CrewOverview>
+              </>
+            )}
+            <h2>Similar {type === 'tv' ? 'Shows' : 'Movies'}</h2>
+            <SimOverview>
+              {data.similar.slice(0, 10).map(item => (
+                <a key={item.id} href={`/detail/${type}/${item.id}`}>
+                  {item.name || item.title}
+                </a>
               ))}
-            </Genres>
-            <Overview>
-              <h2>Overview</h2>
-              <p>{detail.overview}</p>
-            </Overview>
-          </Details>
-        </Information>
-        <SecondaryInformation>
-          {credits.cast.length > 0 && (
-            <>
-              <h2>Top Billed Cast</h2>
-              <CastOverview>
-                {credits.cast.slice(0, 6).map(member => (
-                  <Cast key={member.name}>
-                    <div className="cast-img-wrapper">
-                      <img src={`${IMAGE_URL}w185${member.profile_path}`} alt="" />
-                    </div>
-                    <div className="cast-names">
-                      <span>{member.name}</span>
-                      <span>{member.character}</span>
-                    </div>
-                  </Cast>
-                ))}
-              </CastOverview>
-            </>
-          )}
-          {filteredVideos.length > 0 && (
-            <>
-              <h2>Trailer</h2>
-              <Trailer>
-                <iframe
-                  width="560"
-                  title="Trailer"
-                  height="315"
-                  src={`https://www.youtube-nocookie.com/embed/${filteredVideos[0].key}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </Trailer>
-            </>
-          )}
-          {credits.crew.length > 0 && (
-            <>
-              <h2>Featured Crew</h2>
-              <CrewOverview>
-                {credits.crew.slice(0, 10).map(member => (
-                  <Crew key={`${member.name}-${member.job}`}>
-                    {member.name} <span>({member.job})</span>
-                  </Crew>
-                ))}
-              </CrewOverview>
-            </>
-          )}
-          <h2>Similar {type === 'tv' ? 'Shows' : 'Movies'}</h2>
-          <SimOverview>
-            {similar.slice(0, 10).map(item => (
-              <a key={item.id} href={`/detail/${type}/${item.id}`}>
-                {item.name || item.title}
-              </a>
-            ))}
-          </SimOverview>
-        </SecondaryInformation>
-      </Wrapper>
-    )
-  }
+            </SimOverview>
+          </SecondaryInformation>
+        </>
+      )}
+    </Wrapper>
+  )
 }
+
+export default DetailedView
 
 DetailedView.propTypes = {
   type: PropTypes.oneOf(['tv', 'movie']).isRequired,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
 }

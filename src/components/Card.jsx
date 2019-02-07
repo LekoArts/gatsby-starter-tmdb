@@ -121,14 +121,16 @@ const StyledLink = styled(Link)`
   }
 `
 
+const trans = (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
+
 const Card = ({ name, link, cover, next, rating, status, release, episodes, seasons }) => {
   const ref = useRef()
   const [isHovered, setHovered] = useState(false)
 
-  const [animatedProps, setAnimatedProps] = useSpring({
+  const [animatedProps, set] = useSpring(() => ({
     xys: [0, 0, 1],
     config: { mass: 10, tension: 400, friction: 30, precision: 0.00001 },
-  })
+  }))
 
   return (
     <Inner
@@ -138,23 +140,21 @@ const Card = ({ name, link, cover, next, rating, status, release, episodes, seas
         const x =
           clientX - (ref.current.offsetLeft - (window.scrollX || window.pageXOffset || document.body.scrollLeft))
         const y = clientY - (ref.current.offsetTop - (window.scrollY || window.pageYOffset || document.body.scrollTop))
-        const dampen = 90 // Lower the number the less rotation
+        const dampen = 80 // Higher number => less rotation
         const xys = [
           -(y - ref.current.clientHeight / 2) / dampen, // rotateX
           (x - ref.current.clientWidth / 2) / dampen, // rotateY
           1.07, // Scale
         ]
-        setAnimatedProps({ xys })
+        set({ xys })
       }}
       onMouseLeave={() => {
         setHovered(false)
-        setAnimatedProps({ xys: [0, 0, 1] })
+        set({ xys: [0, 0, 1] })
       }}
       style={{
         zIndex: isHovered ? 2 : 1,
-        transform: animatedProps.xys.interpolate(
-          (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
-        ),
+        transform: animatedProps.xys.interpolate(trans),
       }}
     >
       <StyledLink to={`/detail/${link}`}>
