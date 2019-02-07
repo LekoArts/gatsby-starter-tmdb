@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { graphql, Link, StaticQuery } from 'gatsby'
+import { Link } from 'gatsby'
 import styled, { createGlobalStyle } from 'styled-components'
-import Helmet from 'react-helmet'
 import { IconMother } from './Icon'
 import '../fonts/inter-ui.css'
 
