@@ -1,14 +1,13 @@
 require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV}`,
+  path: `.env`,
 })
 
 module.exports = {
   siteMetadata: {
-    title: 'The Movie Database - Gatsby',
-    description: 'Source from The Movie Database (TMDb) API (v3) in Gatsby.',
-    url: 'https://tmdb.lekoarts.de',
+    title: process.env.TITLE || 'The Movie Database - LekoArts',
+    description: process.env.DESC || 'Source from The Movie Database (TMDb) API (v3) in Gatsby.',
+    url: process.env.URL || 'https://tmdb.lekoarts.de',
     logo: '/logo.png',
-    twitter: '@lekoarts_de',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -44,7 +43,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'The Movie Database - Gatsby',
+        name: process.env.TITLE || 'The Movie Database - LekoArts',
         short_name: 'TMDb',
         start_url: '/',
         background_color: '#272B35',

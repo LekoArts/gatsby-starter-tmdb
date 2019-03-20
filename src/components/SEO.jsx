@@ -9,7 +9,7 @@ export default class SEO extends Component {
         query={query}
         render={({
           site: {
-            siteMetadata: { title, description, url, logo, twitter },
+            siteMetadata: { title, description, url, logo },
           },
         }) => (
           <Helmet>
@@ -28,7 +28,6 @@ export default class SEO extends Component {
             <meta property="og:image:width" content="512" />
             <meta property="og:image:height" content="512" />
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:creator" content={twitter} />
             <meta name="twitter:title" content={title} />
             <meta name="twitter:description" content={description} />
             <meta name="twitter:image" content={`${url}${logo}`} />
@@ -47,7 +46,6 @@ const query = graphql`
         description
         url
         logo
-        twitter
       }
     }
   }
