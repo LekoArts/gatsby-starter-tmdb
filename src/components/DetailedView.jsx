@@ -478,5 +478,9 @@ export default DetailedView
 
 DetailedView.propTypes = {
   type: PropTypes.oneOf(['tv', 'movie']).isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
+}
+
+DetailedView.defaultProps = {
+  id: null,
 }
