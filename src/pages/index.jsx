@@ -175,7 +175,7 @@ const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMo
             </TabList>
             <TabPanel>
               <Row>
-                {favTV.edges.map(({ node: tv }) => {
+                {favTV.nodes.map(tv => {
                   let airDate
                   if (tv.next_episode_to_air) {
                     airDate = tv.next_episode_to_air.air_date
@@ -200,7 +200,7 @@ const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMo
             </TabPanel>
             <TabPanel>
               <Row>
-                {favMovies.edges.map(({ node: movie }) => (
+                {favMovies.nodes.map(movie => (
                   <Column key={movie.title}>
                     <Card
                       link={`movie/${movie.accountFavoriteMoviesId}`}
@@ -223,7 +223,7 @@ const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMo
             </TabList>
             <TabPanel>
               <Row>
-                {watchedTV.edges.map(({ node: tv }) => {
+                {watchedTV.nodes.map(tv => {
                   let airDate
                   if (tv.next_episode_to_air) {
                     airDate = tv.next_episode_to_air.air_date
@@ -248,7 +248,7 @@ const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMo
             </TabPanel>
             <TabPanel>
               <Row>
-                {watchedMovies.edges.map(({ node: movie }) => (
+                {watchedMovies.nodes.map(movie => (
                   <Column key={movie.title}>
                     <Card
                       link={`movie/${movie.accountMovieWatchlistId}`}
@@ -266,11 +266,11 @@ const IndexPage = ({ data: { info, lists, favMovies, favTV, watchedTV, watchedMo
         <TabPanel>
           <Tabs forceRenderTabPanel>
             <TabList>
-              {lists.edges.map(({ node: list }) => (
+              {lists.nodes.map(list => (
                 <Tab key={list.name}>{list.name}</Tab>
               ))}
             </TabList>
-            {lists.edges.map(({ node: list }) => (
+            {lists.nodes.map(list => (
               <TabPanel key={list.name}>
                 <Desc>{list.description}</Desc>
                 <Row>
@@ -304,23 +304,23 @@ IndexPage.propTypes = {
     }),
     lists: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
-      edges: PropTypes.array.isRequired,
+      nodes: PropTypes.array.isRequired,
     }).isRequired,
     favMovies: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
-      edges: PropTypes.array.isRequired,
+      nodes: PropTypes.array.isRequired,
     }).isRequired,
     favTV: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
-      edges: PropTypes.array.isRequired,
+      nodes: PropTypes.array.isRequired,
     }).isRequired,
     watchedTV: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
-      edges: PropTypes.array.isRequired,
+      nodes: PropTypes.array.isRequired,
     }).isRequired,
     watchedMovies: PropTypes.shape({
       totalCount: PropTypes.number.isRequired,
-      edges: PropTypes.array.isRequired,
+      nodes: PropTypes.array.isRequired,
     }).isRequired,
   }).isRequired,
 }
@@ -332,21 +332,19 @@ export const pageQuery = graphql`
     }
     lists: allTmdbAccountLists {
       totalCount
-      edges {
-        node {
+      nodes {
+        name
+        description
+        items {
           name
-          description
-          items {
-            name
-            vote_average
-            first_air_date
-            media_type
-            listItemId
-            poster_path {
-              childImageSharp {
-                fixed(height: 525, quality: 90) {
-                  ...GatsbyImageSharpFixed_withWebp
-                }
+          vote_average
+          first_air_date
+          media_type
+          listItemId
+          poster_path {
+            childImageSharp {
+              fixed(height: 525, quality: 90) {
+                ...GatsbyImageSharpFixed_withWebp
               }
             }
           }
@@ -355,41 +353,37 @@ export const pageQuery = graphql`
     }
     favTV: allTmdbAccountFavoriteTv(sort: { fields: [vote_average], order: DESC }) {
       totalCount
-      edges {
-        node {
-          poster_path {
-            childImageSharp {
-              fixed(height: 525, quality: 90) {
-                ...GatsbyImageSharpFixed_withWebp
-              }
+      nodes {
+        poster_path {
+          childImageSharp {
+            fixed(height: 525, quality: 90) {
+              ...GatsbyImageSharpFixed_withWebp
             }
           }
-          name
-          next_episode_to_air {
-            air_date
-          }
-          accountFavoriteTvId
-          vote_average
-          status
-          number_of_episodes
-          number_of_seasons
-          first_air_date
         }
+        name
+        next_episode_to_air {
+          air_date
+        }
+        accountFavoriteTvId
+        vote_average
+        status
+        number_of_episodes
+        number_of_seasons
+        first_air_date
       }
     }
     favMovies: allTmdbAccountFavoriteMovies(sort: { fields: [vote_average], order: DESC }) {
       totalCount
-      edges {
-        node {
-          release_date
-          vote_average
-          title
-          accountFavoriteMoviesId
-          poster_path {
-            childImageSharp {
-              fixed(height: 525, quality: 90) {
-                ...GatsbyImageSharpFixed_withWebp
-              }
+      nodes {
+        release_date
+        vote_average
+        title
+        accountFavoriteMoviesId
+        poster_path {
+          childImageSharp {
+            fixed(height: 525, quality: 90) {
+              ...GatsbyImageSharpFixed_withWebp
             }
           }
         }
@@ -397,23 +391,21 @@ export const pageQuery = graphql`
     }
     watchedTV: allTmdbAccountTvWatchlist(sort: { fields: [first_air_date], order: DESC }) {
       totalCount
-      edges {
-        node {
-          first_air_date
-          next_episode_to_air {
-            air_date
-          }
-          vote_average
-          status
-          accountTvWatchlistId
-          name
-          number_of_seasons
-          number_of_episodes
-          poster_path {
-            childImageSharp {
-              fixed(height: 525, quality: 90) {
-                ...GatsbyImageSharpFixed_withWebp
-              }
+      nodes {
+        first_air_date
+        next_episode_to_air {
+          air_date
+        }
+        vote_average
+        status
+        accountTvWatchlistId
+        name
+        number_of_seasons
+        number_of_episodes
+        poster_path {
+          childImageSharp {
+            fixed(height: 525, quality: 90) {
+              ...GatsbyImageSharpFixed_withWebp
             }
           }
         }
@@ -421,17 +413,15 @@ export const pageQuery = graphql`
     }
     watchedMovies: allTmdbAccountMovieWatchlist(sort: { fields: [release_date], order: DESC }) {
       totalCount
-      edges {
-        node {
-          release_date
-          vote_average
-          accountMovieWatchlistId
-          title
-          poster_path {
-            childImageSharp {
-              fixed(height: 525, quality: 90) {
-                ...GatsbyImageSharpFixed_withWebp
-              }
+      nodes {
+        release_date
+        vote_average
+        accountMovieWatchlistId
+        title
+        poster_path {
+          childImageSharp {
+            fixed(height: 525, quality: 90) {
+              ...GatsbyImageSharpFixed_withWebp
             }
           }
         }
