@@ -23,7 +23,7 @@
     "gatsby-transformer-sharp": "^2.2.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
-    "react-content-loader": "^4.2.1",
+    "react-content-loader": "^4.2.2",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
     "react-spring": "^8.0.27",
