@@ -1,12 +1,15 @@
-exports.onCreatePage = async ({ page, actions }) => {
-  const { createPage } = actions
+const { VanillaExtractPlugin } = require(`@vanilla-extract/webpack-plugin`)
 
-  // page.matchPath is a special key that's used for matching pages
-  // only on the client.
-  if (page.path.match(/^\/detail/)) {
-    page.matchPath = `/detail/*`
+exports.onCreateBabelConfig = ({ actions }) => {
+  actions.setBabelPlugin({
+    name: require.resolve(`@vanilla-extract/babel-plugin`),
+  })
+}
 
-    // Update the page.
-    createPage(page)
+exports.onCreateWebpackConfig = ({ actions, stage }) => {
+  if (stage === `develop` || stage === `build-javascript`) {
+    actions.setWebpackConfig({
+      plugins: [new VanillaExtractPlugin()],
+    })
   }
 }

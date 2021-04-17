@@ -1,6 +1,0 @@
-[template.environment]
-  GATSBY_API_KEY = "Your TMDb API key"
-  SESSION_ID = "Your TMDb session ID"
-  TITLE = "The website's title"
-  DESC = "The website's description"
-  URL = "The websites's main URL (without a trailing slash)"

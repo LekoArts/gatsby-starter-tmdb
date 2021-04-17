@@ -1,27 +1,22 @@
-import React from 'react'
-import Back from '../components/Back'
-import Wrapper from '../components/Wrapper'
-import SEO from '../components/SEO'
+import * as React from "react"
+import Layout from "../components/layout"
+import Link from "../components/link"
 
 const Attribution = () => (
-  <Wrapper>
-    <SEO />
+  <Layout>
     <h1>Attribution</h1>
-    <Back />
     <p>
-      <a href="https://www.themoviedb.org/">The Movie Database</a>
+      <Link to="https://www.themoviedb.org/">The Movie Database</Link> for providing all the data via its API.
     </p>
     <p>
-      <a href="https://github.com/grantholle/moviedb-promise">moviedb-promise</a>
-    </p>
-    <p>
-      <a href="https://usehooks.com/#useSpring">React Spring Hooks Example</a>
+      <Link to="https://github.com/grantholle/moviedb-promise">moviedb-promise</Link> for helping with the TS types and
+      some general concepts around effectively fetching the data.
     </p>
     <p>
       Star by laris icon from the Noun Project, Calendar by Thengakola from the Noun Project, movie ticket by Three Six
-      Five from the Noun Project
+      Five from the Noun Project.
     </p>
-  </Wrapper>
+  </Layout>
 )
 
 export default Attribution
