@@ -1203,9 +1203,9 @@
   integrity sha512-yN7kbciD87WzLGc5539Tn0sApjyiGHAJgKvG9W8C7O+6c7qmoQMfVs0W4bX17eqz6C78QJqqFrtgdK5EWf6Qow==
 
 "@hapi/hoek@^9.0.0":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.1.1.tgz#9daf5745156fd84b8e9889a2dc721f0c58e894aa"
-  integrity sha512-CAEbWH7OIur6jEOzaai83jq3FmKmv4PmX1JYfs9IrYcGEVI/lyL1EXJGCj7eFVJ0bg5QR8LMxBlEtA+xKiLpFw==
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.2.0.tgz#f3933a44e365864f4dad5db94158106d511e8131"
+  integrity sha512-sqKVVVOe5ivCaXDWivIJYVSaEgdQK9ul7a4Kity5Iw7u9+wBAPbX1RMSnLLmp7O4Vzj0WOWwMAJsTL00xwaNug==
 
 "@hapi/joi@^15.1.1":
   version "15.1.1"
@@ -5175,9 +5175,9 @@ gatsby-source-filesystem@^3.2.0:
     xstate "^4.14.0"
 
 gatsby-source-tmdb@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/gatsby-source-tmdb/-/gatsby-source-tmdb-2.0.1.tgz#1083f4153e7e7ab150d3de392d2461197841ed90"
-  integrity sha512-2o70ZXb4+la071Dzn06ewFSS/rru5G05BiNLiAE1aHHxhckDbUjCvQBIF9kYa51nW75i5Tm26o3VXqBWQv+BUA==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/gatsby-source-tmdb/-/gatsby-source-tmdb-2.0.2.tgz#b5277867abaea6925debd49f3d12032b67b5a2dc"
+  integrity sha512-vStTmrc1XJGCeMrcYN8iPG7q9o+1V0bXUcZXM2psKsZ0wR2kv6UYNmvfbkHEUgfxXBdCkDDLJVsYo/QzKu7Suw==
   dependencies:
     gatsby-node-helpers "^1.2.1"
     gatsby-source-filesystem "^3.2.0"
@@ -7801,9 +7801,9 @@ object-copy@^0.1.0:
     kind-of "^3.0.3"
 
 object-inspect@^1.9.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.10.0.tgz#b7fbe0ff392e09ac138f9d0552920f0c5697a4d1"
-  integrity sha512-9LnIbH6efKf0CeEZkb3ny2C9fuPIssucCN7UlI60aX68yl40ZUhvECEGhXOlpH8cbuoQ9ex8R4tAvewbVINGOA==
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.10.1.tgz#b69d9494d35a56387bbaebbae61c55510d877a1a"
+  integrity sha512-WQUIkCSDPWm5ing/PTUkLr2KaOXX2uV/vz1hLGW2XbZ/RDUmtgcsOyEqA1ox0rkyNx9mJX4kxX+YWceje3pmag==
 
 object-is@^1.0.1:
   version "1.1.5"
