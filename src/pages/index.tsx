@@ -182,7 +182,13 @@ export const query = graphql`
         poster_path {
           localFile {
             childImageSharp {
-              gatsbyImageData(quality: 90, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED, width: 600)
+              gatsbyImageData(
+                quality: 90
+                formats: [AUTO, WEBP, AVIF]
+                placeholder: BLURRED
+                width: 600
+                breakpoints: [360, 450, 600]
+              )
             }
           }
         }
@@ -241,6 +247,7 @@ export const query = graphql`
   }
 `
 
+/* eslint-disable camelcase */
 type DataProps = {
   info: {
     username: string
